@@ -27,11 +27,33 @@ function initNavToggle() {
   var toggle = document.querySelector('.nav-toggle');
   var links = document.querySelector('.nav-links');
   if (!toggle || !links) return;
+
+  var backdrop = document.createElement('div');
+  backdrop.className = 'nav-backdrop';
+  document.body.appendChild(backdrop);
+
+  function closeNav() {
+    links.classList.remove('is-open');
+    toggle.classList.remove('is-active');
+    backdrop.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  function openNav() {
+    links.classList.add('is-open');
+    toggle.classList.add('is-active');
+    backdrop.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
   toggle.addEventListener('click', function () {
-    links.classList.toggle('is-open');
+    if (links.classList.contains('is-open')) closeNav(); else openNav();
   });
+  backdrop.addEventListener('click', closeNav);
   links.querySelectorAll('a').forEach(function (a) {
-    a.addEventListener('click', function () { links.classList.remove('is-open'); });
+    a.addEventListener('click', closeNav);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeNav();
   });
 }
 
